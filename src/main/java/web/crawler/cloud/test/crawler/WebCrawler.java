@@ -1,5 +1,6 @@
 package web.crawler.cloud.test.crawler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,9 +30,6 @@ public class WebCrawler {
 
     public void getPageUrls(String url, int duration) {
 
-        if (urls.size() > 10) {
-            return;
-        }
 
         if (!urls.contains(url) && url != null) {
             try {
@@ -47,8 +45,20 @@ public class WebCrawler {
                 Elements urlsFromPage = document.select("a[href]");
 
                 for (Element oneUrlFromPage : urlsFromPage) {
+                    System.out.println("--------text-------");
+                    System.out.println(oneUrlFromPage.text());
+                    System.out.println("--------html-------");
+                    System.out.println(oneUrlFromPage.html());
+                    System.out.println("--------toString-------");
+                    System.out.println(oneUrlFromPage.toString());
 
-                    getPageUrls(oneUrlFromPage.attr("abs:href"), timeout);
+                    String href = oneUrlFromPage.attr("href");
+                    if (StringUtils.isBlank(href)
+                            ||  href.startsWith("#")) {
+                        continue;
+                    }
+
+                    getPageUrls(oneUrlFromPage.attr("href"), timeout);//abs:href
                 }
 
             } catch (Exception e) {
