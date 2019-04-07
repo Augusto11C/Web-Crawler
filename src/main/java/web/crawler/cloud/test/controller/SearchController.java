@@ -24,13 +24,13 @@ public class SearchController {
 
     @RequestMapping(value = "crawler_param", method = RequestMethod.POST)
     @ResponseBody
-    public List<String> crawlerTest(@RequestParam String urlToCrawler, @RequestParam int crawlerDuration) {
+    public List<String> crawlerTest(@RequestParam String urlToCrawler, @RequestParam int mapMaxSize) {
 
         if (urlToCrawler != null ) {
 
-            System.out.println(crawlerDuration);
+            System.out.println(mapMaxSize);
 
-            webCrawler.getPageUrls(urlToCrawler,crawlerDuration);
+            webCrawler.getPageUrls(urlToCrawler,mapMaxSize);
             while (webCrawler.getUrls().size() < 10) ;
 
             return convertToListOfStrings(webCrawler.getUrls());
