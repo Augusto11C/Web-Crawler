@@ -27,6 +27,7 @@ public class SearchController {
     public List<String> crawlerTest(@RequestParam String urlToCrawler, @RequestParam int mapMaxSize) {
 
         if (urlToCrawler != null ) {
+            webCrawler.cleanURLs();
 
             System.out.println(mapMaxSize);
 

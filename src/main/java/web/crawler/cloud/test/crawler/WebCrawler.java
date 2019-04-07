@@ -6,15 +6,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Service;
 import web.crawler.cloud.test.entity.Url;
-import web.crawler.cloud.test.repository.UrlRepository;
 
 import java.net.URL;
 import java.util.HashSet;
 
-@EnableMongoRepositories
 @Service
 public class WebCrawler {
     private final int TIMEOUT = 30000;
@@ -24,8 +21,7 @@ public class WebCrawler {
         urls = new HashSet<String>();
     }
 
-    @Autowired
-    UrlRepository urlRepository;
+
 
     public void getPageUrls(String url, int mapMaxSize) {
 
@@ -41,7 +37,6 @@ public class WebCrawler {
 
                 //Saving on BD
                 Url newUrl = new Url(url);
-                urlRepository.save(newUrl);
 
                 Document document = Jsoup.parse(new URL(url), TIMEOUT);
                 Elements urlsFromPage = document.select("a[href]");
@@ -71,6 +66,10 @@ public class WebCrawler {
 
     public HashSet<String> getUrls() {
         return urls;
+    }
+
+    public void cleanURLs(){
+        urls.clear();
     }
 
 }
