@@ -19,7 +19,7 @@ public class SearchController {
 
     @GetMapping("/")
     public String home() {
-        return "/home";
+        return "home";
     }
 
     @RequestMapping(value = "crawler_param", method = RequestMethod.POST)
