@@ -1,0 +1,4 @@
+web\crawler\cloud\test\TestApplication.class
+web\crawler\cloud\test\crawler\WebCrawler.class
+web\crawler\cloud\test\controller\SearchController.class
+web\crawler\cloud\test\entity\Url.class
