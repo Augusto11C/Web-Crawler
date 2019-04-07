@@ -23,13 +23,15 @@
 
 <main role="main" class="container">
 
-    <h4 class="form-title mt-3">IBM Web Crawler</h4>
+    <h4 class="form-title mt-3">Web Crawler</h4>
     <form autocomplete="off" class="form-inline justify-content-center mb-3">
         <div class="input-group">
-            <input type="text" id="url-input" class="form-control" placeholder="www.ibm.com.br">
+            <input type="text" id="url-input" class="form-control" placeholder="www.youtube.com.br">
+            <input type="number" id="time-input" class="form-control" placeholder="Ex: 60000 (Equal 1 minute)"
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
         </div>
-        <button type="button" class="btn btn-primary ml-3" onclick="validate()"><i class="fa fa-check"></i> Start Web
-            Crowler
+        <button type="button" class="btn btn-primary ml-3" onclick="validate()"><i class="fa fa-check">
+        </i> Start WebCrowler
         </button>
     </form>
 
@@ -51,16 +53,26 @@
 <script type="text/javascript">
     function validate() {
         var urlToCrawler = $('#url-input').val()
+        var crawlerDuration = $('#time-input').val()
+
+        if(crawlerDuration < 60000) {
+            crawlerDuration = 60000
+        };
 
         $.ajax({
             type: "POST",
             // contentType: "application/json",
             url: "crawler_param",
-            data: {"urlToCrawler": urlToCrawler},
+            data: {
+                "urlToCrawler": urlToCrawler,
+                "crawlerDuration": crawlerDuration
+            },
             //cache: false,
             //timeout: 600000,
             success: function (data) {
+
                 console.log("SUCCESS : ", urlToCrawler);
+
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var myResults = "<li class=\"url-crawled\">" + data[i] + "</li>"

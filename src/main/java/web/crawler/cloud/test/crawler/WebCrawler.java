@@ -17,7 +17,7 @@ import java.util.HashSet;
 @Service
 public class WebCrawler {
 
-    static final int TIMEOUT = 30000;   // one minute
+    private int timeout = 60000;   // one minute
     private HashSet<String> urls;
 
     public WebCrawler() {
@@ -27,7 +27,7 @@ public class WebCrawler {
     @Autowired
     UrlRepository urlRepository;
 
-    public void getPageUrls(String url) {
+    public void getPageUrls(String url, int duration) {
 
         if (urls.size() > 10) {
             return;
@@ -35,18 +35,20 @@ public class WebCrawler {
 
         if (!urls.contains(url) && url != null) {
             try {
+
+                timeout = duration;
                 urls.add(url);
 
                 //Saving on BD
                 Url newUrl = new Url(url);
                 urlRepository.save(newUrl);
 
-                Document document = Jsoup.parse(new URL(url),TIMEOUT);
+                Document document = Jsoup.parse(new URL(url),timeout);
                 Elements urlsFromPage = document.select("a[href]");
 
                 for (Element oneUrlFromPage : urlsFromPage) {
 
-                    getPageUrls(oneUrlFromPage.attr("abs:href"));
+                    getPageUrls(oneUrlFromPage.attr("abs:href"), timeout);
                 }
 
             } catch (Exception e) {
