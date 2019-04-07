@@ -50,17 +50,17 @@
 
 <script type="text/javascript">
     function validate() {
-        var urlToCrawler2 = $('#url-input').val()
+        var urlToCrawler = $('#url-input').val()
 
         $.ajax({
             type: "POST",
             // contentType: "application/json",
             url: "crawler_param",
-            data: {"urlToCrawler2": urlToCrawler2},
+            data: {"urlToCrawler": urlToCrawler},
             //cache: false,
             //timeout: 600000,
             success: function (data) {
-                console.log("SUCCESS : ", urlToCrawler2);
+                console.log("SUCCESS : ", urlToCrawler);
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var myResults = "<li class=\"url-crawled\">" + data[i] + "</li>"
