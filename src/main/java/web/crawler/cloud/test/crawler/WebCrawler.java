@@ -17,8 +17,7 @@ import java.util.HashSet;
 @EnableMongoRepositories
 @Service
 public class WebCrawler {
-
-    private int timeout = 60000;   // one minute
+    private final int TIMEOUT = 30000;
     private HashSet<String> urls;
 
     public WebCrawler() {
@@ -28,37 +27,37 @@ public class WebCrawler {
     @Autowired
     UrlRepository urlRepository;
 
-    public void getPageUrls(String url, int duration) {
+    public void getPageUrls(String url, int mapMaxSize) {
 
+/*        if (urls.size() > repetition) {
+            return;
+        }*/
 
-        if (!urls.contains(url) && url != null) {
+        if (!urls.contains(url) && url != null && mapMaxSize > 0) {
+            System.out.println(mapMaxSize);
             try {
 
-                timeout = duration;
                 urls.add(url);
 
                 //Saving on BD
                 Url newUrl = new Url(url);
                 urlRepository.save(newUrl);
 
-                Document document = Jsoup.parse(new URL(url),timeout);
+                Document document = Jsoup.parse(new URL(url), TIMEOUT);
                 Elements urlsFromPage = document.select("a[href]");
-
+                int auxRepetition = mapMaxSize - 1;
                 for (Element oneUrlFromPage : urlsFromPage) {
-                    System.out.println("--------text-------");
-                    System.out.println(oneUrlFromPage.text());
-                    System.out.println("--------html-------");
-                    System.out.println(oneUrlFromPage.html());
-                    System.out.println("--------toString-------");
-                    System.out.println(oneUrlFromPage.toString());
-
+                    if (urls.size() > mapMaxSize) {
+                        return;
+                    }
                     String href = oneUrlFromPage.attr("href");
                     if (StringUtils.isBlank(href)
-                            ||  href.startsWith("#")) {
+                            || href.startsWith("#")) {
                         continue;
                     }
-
-                    getPageUrls(oneUrlFromPage.attr("href"), timeout);//abs:href
+                    auxRepetition = auxRepetition - 1;
+                    System.out.println(auxRepetition + "auxRepetition");
+                    getPageUrls(oneUrlFromPage.attr("abs:href"), auxRepetition);//abs:href
                 }
 
             } catch (Exception e) {
